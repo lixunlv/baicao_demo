@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux'
+import { routerStateReducer } from 'redux-router'
 import {
     SELECT_CID, REQUEST_ORDERS, RECEIVE_ORDERS, SN_CLICKED, BACK_TO_LIST, SAVE_ORDER_CHANGED, DELETE_LINE
 } from '../actions'
@@ -79,7 +80,8 @@ const rootReducer = combineReducers({
     orders,
     isFetching,
     cid,
-    currentOrder
+    currentOrder,
+    router: routerStateReducer
 })
 
 export default rootReducer

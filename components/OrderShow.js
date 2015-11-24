@@ -1,11 +1,17 @@
 import React, { PropTypes, Component } from 'react'
+import { connect } from 'react-redux'
 import InfoSection from './InfoSection'
 import LinesSection from './LinesSection'
+import { saveOrderChanged, deleteLine} from '../actions'
 
-export default class OrderShow extends Component {
+class OrderShow extends Component {
 
     deleteLine(line_id) {
-        this.props.deleteLine(this.props.order.sn, line_id)
+        this.props.dispatch(deleteLine(this.props.order.sn, line_id))
+    }
+
+    saveChanged(sn, changed) {
+        this.props.dispatch(saveOrderChanged(sn, changed))
     }
 
     render() {
@@ -14,8 +20,6 @@ export default class OrderShow extends Component {
         let line_fields = ['name', 'price', 'num']
         let buttom_fields = [['price', '订单金额'], ['pay', '已付金额'], ['n_pay', '未付金额'], ['memo', '备注']]
 
-        console.log(order)
-
         return (
             <div className="page cell">
                 <div className="hd">
@@ -23,13 +27,13 @@ export default class OrderShow extends Component {
                     <p className="page_desc">订单号：{ (order.ref == true ? 'TH' : 'XS') + order.sn }</p>
                 </div>
 
-                <InfoSection fields={fields} data={order} saveChanged={this.props.saveChanged}/>
+                <InfoSection fields={fields} data={order} saveChanged={this.saveChanged.bind(this)}/>
 
                 <LinesSection fields={line_fields} lines={order.lines} deleteLine={this.deleteLine.bind(this)} />
 
                 <br />
 
-                <InfoSection fields={buttom_fields} data={order} saveChanged={this.props.saveChanged} />
+                <InfoSection fields={buttom_fields} data={order} saveChanged={this.saveChanged.bind(this)} />
 
                 <br />
                 <br />
@@ -39,8 +43,15 @@ export default class OrderShow extends Component {
     }
 }
 
-OrderShow.propTypes = {
-    order: PropTypes.object.isRequired,
-    saveChanged: PropTypes.func.isRequired,
-    deleteLine: PropTypes.func.isRequired
+function mapStateToProps(state) {
+    return {
+        order: state.currentOrder
+    }
 }
+
+OrderShow.propTypes = {
+    order: PropTypes.object.isRequired
+}
+
+export default connect(mapStateToProps)(OrderShow)
+

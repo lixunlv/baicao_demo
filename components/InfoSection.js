@@ -15,6 +15,7 @@ export default class InfoSection extends Component {
     }
 
     handleEditSave() {
+        console.log(this.props.data)
         this.props.saveChanged(this.props.data.sn, this.state.changed)
         this.setState({ editing: false })
     }
